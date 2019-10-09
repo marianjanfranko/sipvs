@@ -1,4 +1,4 @@
-package formular.xmlutils;
+package xmlutils;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -27,8 +27,7 @@ public class XMLtoHTML {
 			fw.write(sw.toString());
 			fw.close();
 
-			System.out
-					.println("file generated at " + finalFilePath);
+			System.out.println("file generated at " + finalFilePath);
 
 		} catch (IOException e) {
 			e.printStackTrace();

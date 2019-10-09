@@ -18,19 +18,19 @@ public class XMLValidator {
     public boolean validate(String xmlFile, String schemaFile) {
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         try {
-            Schema schema = schemaFactory.newSchema(new File(getResource(schemaFile)));
+            Schema schema = schemaFactory.newSchema(new File(schemaFile));
 
             Validator validator = schema.newValidator();
-            validator.validate(new StreamSource(new File(getResource(xmlFile))));
+            validator.validate(new StreamSource(new File(xmlFile)));
             return true;
         } catch (SAXException e) {
-            e.printStackTrace();
+            System.out.println("Vami vybrané XML nie je validné");
             return false;
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.out.println("Vami vybrané XML nie je validné");
             return false;
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Vami vybrané XML nie je validné");
             return false;
         }
     }
