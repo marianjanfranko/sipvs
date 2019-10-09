@@ -12,9 +12,9 @@ public class XMLSerializer {
 	public XMLSerializer() {
 	}
 	
-	public static void serializeXML() throws JsonGenerationException, JsonMappingException, IOException{
+	public static void serializeXML(String xmlPath, Object obj) throws JsonGenerationException, JsonMappingException, IOException{
 	    XmlMapper xmlMapper = new XmlMapper();
-	    xmlMapper.writeValue(new File("simple_bean.xml"), new Object());
-	    File file = new File("simple_bean.xml");
+	    xmlMapper.writeValue(new File(xmlPath), obj);
+	    System.out.println("XML generated at " + xmlPath);
 	}
 }
