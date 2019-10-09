@@ -14,8 +14,6 @@ import java.net.URL;
 import java.util.Objects;
 
 public class XMLValidator {
-    public static final String XML_FILE = "records.xml";
-    public static final String SCHEMA_FILE = "records.xsd";
 
     public boolean validate(String xmlFile, String schemaFile) {
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
