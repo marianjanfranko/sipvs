@@ -1,4 +1,4 @@
-package formular.xmlutils;
+package xmlutils;
 
 import org.xml.sax.SAXException;
 
@@ -25,7 +25,13 @@ public class XMLValidator {
             Validator validator = schema.newValidator();
             validator.validate(new StreamSource(new File(getResource(xmlFile))));
             return true;
-        } catch (SAXException | IOException e) {
+        } catch (SAXException e) {
+            e.printStackTrace();
+            return false;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }

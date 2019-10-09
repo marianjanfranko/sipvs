@@ -30,7 +30,7 @@ public class XMLtoHTML {
 			System.out
 					.println("file generated at " + finalFilePath);
 
-		} catch (IOException | TransformerConfigurationException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (TransformerFactoryConfigurationError e) {
 			e.printStackTrace();
