@@ -12,7 +12,7 @@ public class XMLSerializer {
 	public XMLSerializer() {
 	}
 	
-	public void serializeXML() throws JsonGenerationException, JsonMappingException, IOException{
+	public static void serializeXML() throws JsonGenerationException, JsonMappingException, IOException{
 	    XmlMapper xmlMapper = new XmlMapper();
 	    xmlMapper.writeValue(new File("simple_bean.xml"), new Object());
 	    File file = new File("simple_bean.xml");
