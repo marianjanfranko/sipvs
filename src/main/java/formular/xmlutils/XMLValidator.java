@@ -17,14 +17,7 @@ public class XMLValidator {
     public static final String XML_FILE = "records.xml";
     public static final String SCHEMA_FILE = "records.xsd";
 
-    public static void main(String[] args) {
-        XMLValidator XMLValidator = new XMLValidator();
-        boolean valid = XMLValidator.validate(XML_FILE, SCHEMA_FILE);
-
-        System.out.printf("%s validation = %b.", XML_FILE, valid);
-    }
-
-    private boolean validate(String xmlFile, String schemaFile) {
+    public boolean validate(String xmlFile, String schemaFile) {
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         try {
             Schema schema = schemaFactory.newSchema(new File(getResource(schemaFile)));
