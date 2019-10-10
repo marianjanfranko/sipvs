@@ -5,21 +5,28 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
-import javafx.scene.control.Button;
+import xmlutils.XMLSerializer;
 import xmlutils.XMLValidator;
+import xmlutils.XMLtoHTML;
 
+import javax.xml.transform.stream.StreamSource;
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class Main extends Application {
     public FileChooser chooser = new FileChooser();
     XMLValidator xv = new XMLValidator();
+    XMLSerializer xs = new XMLSerializer();
+    XMLtoHTML xth = new XMLtoHTML();
 
     @Override
     public void start(final Stage primaryStage) throws Exception{
@@ -66,6 +73,31 @@ public class Main extends Application {
         };
 
         validate.setOnAction(buttonHandler);
+
+        EventHandler<ActionEvent> saveHandler = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Registration reg = new Registration("Marek", "Otruba", 23, new ArrayList<Date>());
+                File file = chooser.showSaveDialog(primaryStage);
+                try {
+                  xs.serializeXML(file.getAbsolutePath(), reg);
+                } catch (IOException e) {
+                    System.out.println("niekde je chyba");
+                }
+            }
+        };
+
+        save.setOnAction(saveHandler);
+
+        EventHandler<ActionEvent> showHandler = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                File file = chooser.showOpenDialog(primaryStage);
+                    xth.convertXMLToHTML(new StreamSource(file),new StreamSource(new File("C:/Users/samue/Projekty/sipvs/src/test/resources/test_xsl.xsl")),"C:/Users/samue/Projekty/sipvs/src/test/resources/final.html");
+            }
+        };
+
+        generateHtml.setOnAction(showHandler);
 
         Scene scene = new Scene(vBoxAll, 300, 500);
         primaryStage.setScene(scene);
