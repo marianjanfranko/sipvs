@@ -5,10 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
@@ -88,7 +85,11 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 File file = chooser.showOpenDialog(primaryStage);
-                System.out.println(xv.validate(file.getAbsolutePath(), "C:/Users/samue/Projekty/sipvs/src/test/resources/scheme.xsd"));
+                if (xv.validate(file.getAbsolutePath(), "C:/Users/samue/Projekty/sipvs/src/test/resources/scheme.xsd")) {
+                    new Alert(Alert.AlertType.CONFIRMATION, "XML is VALID!").showAndWait();
+                } else {
+                    new Alert(Alert.AlertType.ERROR, "XML is INVALID!").showAndWait();
+                }
             }
         };
 
@@ -106,7 +107,7 @@ public class Main extends Application {
                 Registration reg = new Registration(nameT.getText(), surnameT.getText(), Integer.parseInt(ageT.getText()), finalDates);
                 File file = chooser.showSaveDialog(primaryStage);
                 try {
-                  xs.serializeXML(file.getAbsolutePath(), reg);
+                  xs.serializeXML(file.getAbsolutePath() + ".xml", reg);
                 } catch (IOException e) {
                     System.out.println("niekde je chyba");
                 }
@@ -118,8 +119,9 @@ public class Main extends Application {
         EventHandler<ActionEvent> showHandler = new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                File file = chooser.showOpenDialog(primaryStage);
-                    xth.convertXMLToHTML(new StreamSource(file),new StreamSource(new File("C:/Users/samue/Projekty/sipvs/src/test/resources/test_xsl.xsl")),"C:/Users/samue/Projekty/sipvs/src/test/resources/final.html");
+                File fileOpen = chooser.showOpenDialog(primaryStage);
+                File fileToSave = chooser.showSaveDialog(primaryStage);
+                xth.convertXMLToHTML(new StreamSource(fileOpen),new StreamSource(new File("C:/Users/samue/Projekty/sipvs/src/test/resources/test_xsl.xsl")),fileToSave.getAbsolutePath() + ".html");
             }
         };
 
