@@ -1,16 +1,15 @@
 package sample;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Registration {
 
     private String name;
     private String surname;
     private Integer age;
-    private ArrayList<Date> courseDate ;
+    private ArrayList<String> courseDate ;
 
-    public Registration(String name, String surname, Integer age, ArrayList<Date> courseDate) {
+    public Registration(String name, String surname, Integer age, ArrayList<String> courseDate) {
         this.name = name;
         this.surname = surname;
         this.age = age;
@@ -41,11 +40,11 @@ public class Registration {
         this.age = age;
     }
 
-    public ArrayList<Date> getCourseDate() {
+    public ArrayList<String> getCourseDate() {
         return courseDate;
     }
 
-    public void setCourseDate(ArrayList<Date> courseDate) {
+    public void setCourseDate(ArrayList<String> courseDate) {
         this.courseDate = courseDate;
     }
 }
