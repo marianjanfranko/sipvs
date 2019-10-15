@@ -6,9 +6,11 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -20,7 +22,6 @@ import javax.xml.transform.stream.StreamSource;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Main extends Application {
     public FileChooser chooser = new FileChooser();
@@ -28,28 +29,52 @@ public class Main extends Application {
     XMLSerializer xs = new XMLSerializer();
     XMLtoHTML xth = new XMLtoHTML();
 
+    String[] dates = { "2020-12-20", "2020-12-21", "2020-12-22" };
+
     @Override
     public void start(final Stage primaryStage) throws Exception{
         primaryStage.setTitle("XML Validator");
 
         Label nameL = new Label("Name");
         nameL.setPadding(new Insets(5,10,5,10));
-        TextField nameT = new TextField();
+        final TextField nameT = new TextField();
 
         Label surnameL = new Label("Surname");
         surnameL.setPadding(new Insets(5,10,5,10));
 
-        TextField surnameT = new TextField();
+        final TextField surnameT = new TextField();
 
         Label ageL = new Label("Age");
         ageL.setPadding(new Insets(5,10,5,10));
 
-        TextField ageT = new TextField();
+        final TextField ageT = new TextField();
 
         Label courseDateL = new Label("Course date");
         courseDateL.setPadding(new Insets(5,10,5,10));
 
         TextField courseDateT = new TextField();
+
+        TilePane r = new TilePane();
+
+        // create a label
+        Label l = new Label("Select courses date");
+
+        // add label
+        final VBox Hdates = new VBox();
+        final ArrayList<CheckBox> cBoxList = new ArrayList<CheckBox>();
+
+        for (int i = 0; i < dates.length; i++) {
+
+            // create a checkbox
+            CheckBox c = new CheckBox(dates[i]);
+            cBoxList.add(c);
+            // add label
+            Hdates.getChildren().add(c);
+
+            // set IndeterMinate
+            //c.setIndeterminate(true);
+        }
+
 
         VBox labels = new VBox(nameL, surnameL, ageL, courseDateL);
         VBox values = new VBox(nameT, surnameT, ageT, courseDateT);
@@ -62,7 +87,7 @@ public class Main extends Application {
 
         HBox hBoxButtons = new HBox(save, validate, generateHtml);
         hBoxButtons.setPadding(new Insets(10,10,10,25));
-        VBox vBoxAll = new VBox(hBoxForm, hBoxButtons);
+        VBox vBoxAll = new VBox(hBoxForm, l, Hdates, hBoxButtons);
 
         EventHandler<ActionEvent> buttonHandler = new EventHandler<ActionEvent>() {
             @Override
@@ -77,7 +102,13 @@ public class Main extends Application {
         EventHandler<ActionEvent> saveHandler = new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Registration reg = new Registration("Marek", "Otruba", 23, new ArrayList<Date>());
+                ArrayList<String> finalDates = new ArrayList<>();
+                for (int i = 0; i < dates.length; i++){
+                    if (cBoxList.get(i).isSelected()){
+                        finalDates.add(dates[i]);                    }
+                }
+
+                Registration reg = new Registration(nameT.getText(), surnameT.getText(), Integer.parseInt(ageT.getText()), finalDates);
                 File file = chooser.showSaveDialog(primaryStage);
                 try {
                   xs.serializeXML(file.getAbsolutePath(), reg);
