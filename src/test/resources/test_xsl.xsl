@@ -28,33 +28,46 @@
 
 			<body>
 				<table class="tfmt">
+<!--					<tr>-->
+<!--						<th style="width:250px">Product Code:</th>-->
+<!--						<th style="width:350px">Product Name:</th>-->
+<!--						<th style="width:250px">Price:</th>-->
+<!--						<th style="width:250px">Stock:</th>-->
+<!--					</tr>-->
+
 					<tr>
-						<th style="width:250px">Product Code:</th>
-						<th style="width:350px">Product Name:</th>
-						<th style="width:250px">Price:</th>
-						<th style="width:250px">Stock:</th>
-
-
+						<td class="colfmt">
+							Meno:
+						</td>
+						<td class="colfmt">
+							<xsl:value-of select="name" />
+						</td>
 					</tr>
-
-					<xsl:for-each select="ProductList/Product">
-
+					<tr>
+						<td class="colfmt">
+							Priezvisko:
+						</td>
+						<td class="colfmt">
+							<xsl:value-of select="surname" />
+						</td>
+					</tr>
+					<tr>
+						<td class="colfmt">
+							Vek:
+						</td>
+						<td class="colfmt">
+							<xsl:value-of select="age" />
+						</td>
+					</tr>
+					<xsl:for-each select="courseDate">
 						<tr>
 							<td class="colfmt">
-								<xsl:value-of select="productId" />
+								Dátumy kurzu:
 							</td>
 							<td class="colfmt">
-								<xsl:value-of select="productName" />
-							</td>
-
-							<td class="colfmt">
-								<xsl:value-of select="price" />
-							</td>
-							<td class="colfmt">
-								<xsl:value-of select="stock" />
+								<xsl:value-of select="." />
 							</td>
 						</tr>
-
 					</xsl:for-each>
 				</table>
 			</body>
