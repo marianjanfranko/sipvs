@@ -1,27 +1,24 @@
-<?xml-stylesheet type="text/xsl" href="03knihyAtt.xsl"?>
-<registrations>
+<?xml-stylesheet type="text/xsl"?>
+<!--<registrations>-->
     <registration course_link="http://www.knihy.sk/knihaA">
         <name>Samo</name>
         <surname>Gedera</surname>
         <age>20</age>
-        <course_price>199.99</course_price>
-        <course_date>2020-12-20</course_date>
-        <course_date>2020-12-21</course_date>
-        <course_date>2020-12-22</course_date>
+        <courseDate>2020-12-20</courseDate>
+        <courseDate>2020-12-21</courseDate>
+        <courseDate>2020-12-22</courseDate>
     </registration>
-    <registration>
-        <name>Marek</name>
-        <surname>Otruba</surname>
-        <age>21</age>
-        <course_price>299.99</course_price>
-        <course_date>2020-12-21</course_date>
-        <course_date>2020-12-22</course_date>
-    </registration>
-    <registration>
-        <name>Marian Jan</name>
-        <surname>Franko</surname>
-        <age>22</age>
-        <course_price>399.99</course_price>
-        <course_date>2020-12-22</course_date>
-    </registration>
-</registrations>
+<!--    <registration>-->
+<!--        <name>Marek</name>-->
+<!--        <surname>Otruba</surname>-->
+<!--        <age>21</age>-->
+<!--        <course_date>2020-12-21</course_date>-->
+<!--        <course_date>2020-12-22</course_date>-->
+<!--    </registration>-->
+<!--    <registration>-->
+<!--        <name>Marian Jan</name>-->
+<!--        <surname>Franko</surname>-->
+<!--        <age>22</age>-->
+<!--        <course_date>2020-12-22</course_date>-->
+<!--    </registration>-->
+<!--</registrations>-->
