@@ -12,10 +12,11 @@
 					}
 
 					td.colfmt {
-					border: 1px ;
-					background-color: white;
-					color: black;
-					text-align:right;
+						border: 1px ;
+						background-color: white;
+						color: black;
+						float: left;
+						width: 100px;
 					}
 
 					th {
@@ -28,12 +29,6 @@
 
 			<body>
 				<table class="tfmt">
-<!--					<tr>-->
-<!--						<th style="width:250px">Product Code:</th>-->
-<!--						<th style="width:350px">Product Name:</th>-->
-<!--						<th style="width:250px">Price:</th>-->
-<!--						<th style="width:250px">Stock:</th>-->
-<!--					</tr>-->
 
 					<tr>
 						<td class="colfmt">
@@ -59,11 +54,15 @@
 							<xsl:value-of select="Registration/age" />
 						</td>
 					</tr>
+					<tr>
+						<td class="colfmt">
+							Dátum kurzu:
+						</td>
+					</tr>
 					<xsl:for-each select="Registration/courseDate">
+
 						<tr>
-							<td class="colfmt">
-								Dátumy kurzu:
-							</td>
+
 							<td class="colfmt">
 								<xsl:value-of select="." />
 							</td>

@@ -1,13 +1,13 @@
 <?xml-stylesheet type="text/xsl"?>
 <!--<registrations>-->
-    <registration course_link="http://www.knihy.sk/knihaA">
+    <Registration course_link="http://www.knihy.sk/knihaA">
         <name>Samo</name>
         <surname>Gedera</surname>
         <age>20</age>
         <courseDate>2020-12-20</courseDate>
         <courseDate>2020-12-21</courseDate>
         <courseDate>2020-12-22</courseDate>
-    </registration>
+    </Registration>
 <!--    <registration>-->
 <!--        <name>Marek</name>-->
 <!--        <surname>Otruba</surname>-->

@@ -1,5 +1,7 @@
 package sample;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+
 import java.util.ArrayList;
 
 public class Registration {
@@ -7,6 +9,7 @@ public class Registration {
     private String name;
     private String surname;
     private Integer age;
+    @JacksonXmlElementWrapper(useWrapping = false)
     private ArrayList<String> courseDate ;
 
     public Registration(String name, String surname, Integer age, ArrayList<String> courseDate) {

@@ -29,7 +29,7 @@ public class Main extends Application {
     XMLSerializer xs = new XMLSerializer();
     XMLtoHTML xth = new XMLtoHTML();
 
-    String[] dates = { "2020-12-20", "2020-12-21", "2020-12-22" };
+    String[] dates = { "2020-12-20", "2020-12-21", "2020-12-22", "2020-12-22", "2020-12-22", "2020-12-22" };
 
     @Override
     public void start(final Stage primaryStage) throws Exception{
@@ -48,11 +48,6 @@ public class Main extends Application {
         ageL.setPadding(new Insets(5,10,5,10));
 
         final TextField ageT = new TextField();
-
-        Label courseDateL = new Label("Course date");
-        courseDateL.setPadding(new Insets(5,10,5,10));
-
-        TextField courseDateT = new TextField();
 
         TilePane r = new TilePane();
 
@@ -76,8 +71,8 @@ public class Main extends Application {
         }
 
 
-        VBox labels = new VBox(nameL, surnameL, ageL, courseDateL);
-        VBox values = new VBox(nameT, surnameT, ageT, courseDateT);
+        VBox labels = new VBox(nameL, surnameL, ageL);
+        VBox values = new VBox(nameT, surnameT, ageT);
 
         HBox hBoxForm = new HBox(labels, values);
 
