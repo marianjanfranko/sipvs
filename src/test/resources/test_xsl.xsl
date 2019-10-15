@@ -40,7 +40,7 @@
 							Meno:
 						</td>
 						<td class="colfmt">
-							<xsl:value-of select="name" />
+							<xsl:value-of select="Registration/name" />
 						</td>
 					</tr>
 					<tr>
@@ -48,7 +48,7 @@
 							Priezvisko:
 						</td>
 						<td class="colfmt">
-							<xsl:value-of select="surname" />
+							<xsl:value-of select="Registration/surname" />
 						</td>
 					</tr>
 					<tr>
@@ -56,10 +56,10 @@
 							Vek:
 						</td>
 						<td class="colfmt">
-							<xsl:value-of select="age" />
+							<xsl:value-of select="Registration/age" />
 						</td>
 					</tr>
-					<xsl:for-each select="courseDate">
+					<xsl:for-each select="Registration/courseDate">
 						<tr>
 							<td class="colfmt">
 								Dátumy kurzu:
