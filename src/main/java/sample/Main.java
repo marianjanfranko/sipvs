@@ -104,12 +104,21 @@ public class Main extends Application {
                         finalDates.add(dates[i]);                    }
                 }
 
-                Registration reg = new Registration(nameT.getText(), surnameT.getText(), Integer.parseInt(ageT.getText()), finalDates);
-                File file = chooser.showSaveDialog(primaryStage);
-                try {
-                  xs.serializeXML(file.getAbsolutePath() + ".xml", reg);
-                } catch (IOException e) {
-                    System.out.println("niekde je chyba");
+                if (nameT.getText().length() == 0 || surnameT.getText().length() == 0 || ageT.getText().length() == 0 || finalDates.isEmpty()){
+                    new Alert(Alert.AlertType.ERROR, "Some inputs are empty!").showAndWait();
+                } else {
+                    try {
+                        Integer.parseInt(ageT.getText());
+                        Registration reg = new Registration(nameT.getText(), surnameT.getText(), Integer.parseInt(ageT.getText()), finalDates);
+                        File file = chooser.showSaveDialog(primaryStage);
+                        try {
+                            xs.serializeXML(file.getAbsolutePath() + ".xml", reg);
+                        } catch (IOException e) {
+                            System.out.println("niekde je chyba");
+                        }
+                    } catch (NumberFormatException e) {
+                        new Alert(Alert.AlertType.ERROR, "Age must be number!").showAndWait();
+                    }
                 }
             }
         };
