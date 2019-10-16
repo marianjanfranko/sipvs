@@ -26,7 +26,7 @@ public class Main extends Application {
     XMLSerializer xs = new XMLSerializer();
     XMLtoHTML xth = new XMLtoHTML();
 
-    String[] dates = { "2020-12-20", "2020-12-21", "2020-12-22", "2020-12-22", "2020-12-22", "2020-12-22" };
+    String[] dates = { "2020-12-20", "2020-12-21", "2020-12-22", "2020-12-23", "2020-12-24", "2020-12-25" };
 
     @Override
     public void start(final Stage primaryStage) throws Exception{
@@ -85,10 +85,11 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 File file = chooser.showOpenDialog(primaryStage);
-                if (xv.validate(file.getAbsolutePath(), "C:/Users/samue/Projekty/sipvs/src/test/resources/scheme.xsd")) {
+                String msg = xv.validate(file.getAbsolutePath(), "C:/Users/samue/Projekty/sipvs/src/test/resources/scheme.xsd");
+                if (msg == null) {
                     new Alert(Alert.AlertType.CONFIRMATION, "XML is VALID!").showAndWait();
                 } else {
-                    new Alert(Alert.AlertType.ERROR, "XML is INVALID!").showAndWait();
+                    new Alert(Alert.AlertType.ERROR, "XML is INVALID!\n" + msg).showAndWait();
                 }
             }
         };
@@ -104,15 +105,20 @@ public class Main extends Application {
                         finalDates.add(dates[i]);                    }
                 }
 
-                if (nameT.getText().length() == 0 || surnameT.getText().length() == 0 || ageT.getText().length() == 0 || finalDates.isEmpty()){
-                    new Alert(Alert.AlertType.ERROR, "Some inputs are empty!").showAndWait();
+                if (!isAlpha(nameT.getText()) || nameT.getText().length() == 0 ||
+                        !isAlpha(surnameT.getText()) || surnameT.getText().length() == 0 ||
+                        ageT.getText().length() == 0 || finalDates.isEmpty()){
+                    new Alert(Alert.AlertType.ERROR, "Some inputs are Invalid or Empty!").showAndWait();
                 } else {
                     try {
+
                         Integer.parseInt(ageT.getText());
                         Registration reg = new Registration(nameT.getText(), surnameT.getText(), Integer.parseInt(ageT.getText()), finalDates);
                         File file = chooser.showSaveDialog(primaryStage);
                         try {
+
                             xs.serializeXML(file.getAbsolutePath() + ".xml", reg);
+
                         } catch (IOException e) {
                             System.out.println("niekde je chyba");
                         }
@@ -142,6 +148,17 @@ public class Main extends Application {
 
     }
 
+    public boolean isNum(String age) {
+        if (Integer.parseInt(age) < 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public boolean isAlpha(String name) {
+        return name.matches("[a-zA-Z]+");
+    }
 
     public static void main(String[] args) {
         launch(args);

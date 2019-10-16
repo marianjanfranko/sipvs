@@ -1,6 +1,7 @@
 package sample;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 import java.util.ArrayList;
 
@@ -35,6 +36,7 @@ public class Registration {
         this.surname = surname;
     }
 
+    @JacksonXmlProperty(isAttribute = true)
     public Integer getAge() {
         return age;
     }

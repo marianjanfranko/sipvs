@@ -15,23 +15,22 @@ import java.util.Objects;
 
 public class XMLValidator {
 
-    public boolean validate(String xmlFile, String schemaFile) {
+    public String validate(String xmlFile, String schemaFile) {
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         try {
             Schema schema = schemaFactory.newSchema(new File(schemaFile));
 
             Validator validator = schema.newValidator();
             validator.validate(new StreamSource(new File(xmlFile)));
-            return true;
+            return null;
         } catch (SAXException e) {
-            System.out.println("Vami vybrané XML nie je validné");
-            return false;
+            System.out.println(e.getMessage());
+            String [] msg = e.getLocalizedMessage().split(";");
+            return msg[msg.length-1].split(":")[1];
         } catch (FileNotFoundException e) {
-            System.out.println("Vami vybrané XML nie je validné");
-            return false;
+            return "Vami vybrané XML nie je validné";
         } catch (IOException e) {
-            System.out.println("Vami vybrané XML nie je validné");
-            return false;
+            return "Vami vybrané XML nie je validné";
         }
     }
 

@@ -6,9 +6,8 @@
 		<xsd:sequence>
 			<xsd:element name="name" type="xsd:string"/>
 			<xsd:element name="surname" type="xsd:string"/>
-			<xsd:element name="age" type="xsd:integer"/>
 			<xsd:element name="courseDate" type="xsd:date" minOccurs="1" maxOccurs="unbounded"/>
 		</xsd:sequence>
-		<xsd:attribute name="course_link" type="xsd:anyURI" use="optional"/>
+		<xsd:attribute name="age" type="xsd:integer" use="required"/>
 	</xsd:complexType>
 </xsd:schema>

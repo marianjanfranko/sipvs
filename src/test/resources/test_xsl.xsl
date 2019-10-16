@@ -51,7 +51,7 @@
 							Vek:
 						</td>
 						<td class="colfmt">
-							<xsl:value-of select="Registration/age" />
+							<xsl:value-of select="Registration/@age" />
 						</td>
 					</tr>
 					<tr>
