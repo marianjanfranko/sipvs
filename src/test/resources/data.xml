@@ -1,24 +1,6 @@
-<?xml-stylesheet type="text/xsl"?>
-<!--<registrations>-->
-    <Registration course_link="http://www.knihy.sk/knihaA">
-        <name>Samo</name>
-        <surname>Gedera</surname>
-        <age>20</age>
-        <courseDate>2020-12-20</courseDate>
-        <courseDate>2020-12-21</courseDate>
-        <courseDate>2020-12-22</courseDate>
-    </Registration>
-<!--    <registration>-->
-<!--        <name>Marek</name>-->
-<!--        <surname>Otruba</surname>-->
-<!--        <age>21</age>-->
-<!--        <course_date>2020-12-21</course_date>-->
-<!--        <course_date>2020-12-22</course_date>-->
-<!--    </registration>-->
-<!--    <registration>-->
-<!--        <name>Marian Jan</name>-->
-<!--        <surname>Franko</surname>-->
-<!--        <age>22</age>-->
-<!--        <course_date>2020-12-22</course_date>-->
-<!--    </registration>-->
-<!--</registrations>-->
+<?xml version="1.0" encoding="UTF-8"?>
+<Registration age="23" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="scheme.xsd">
+    <name>samuel</name>
+    <surname>samuel</surname>
+    <courseDate>2020-12-24</courseDate>
+</Registration>

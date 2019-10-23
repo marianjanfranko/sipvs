@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ufl_team xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="scheme2.xsd">
+    <team_name>Black Coyottes</team_name>
+    <email>tomas.bako@gmail.cm</email>
+    <phone_number>0900111222</phone_number>
+    <players>
+        <player gender="m">
+            <firstname>Tomas</firstname>
+            <lastname>Schwartz</lastname>
+            <leaguest>false</leaguest>
+        </player>
+        <player gender="m">
+            <firstname>Peter</firstname>
+            <lastname>Konecny</lastname>
+            <leaguest>false</leaguest>
+        </player>
+        <player gender="m">
+            <firstname>Michal</firstname>
+            <lastname>Sevcovic</lastname>
+            <leaguest>true</leaguest>
+        </player>
+    </players>
+</ufl_team>

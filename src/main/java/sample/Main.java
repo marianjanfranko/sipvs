@@ -11,13 +11,15 @@ import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import sk.ditec.zep.dsigner.xades.XadesSig;
+import sk.ditec.zep.dsigner.xades.plugin.DataObject;
+import sk.ditec.zep.dsigner.xades.plugins.xmlplugin.XmlPlugin;
 import xmlutils.XMLSerializer;
 import xmlutils.XMLValidator;
 import xmlutils.XMLtoHTML;
 
 import javax.xml.transform.stream.StreamSource;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 public class Main extends Application {
@@ -76,8 +78,9 @@ public class Main extends Application {
         Button save = new Button("Save");
         Button validate = new Button("Validate");
         Button generateHtml = new Button("Generate HTML");
+        final Button sign = new Button("sign");
 
-        HBox hBoxButtons = new HBox(save, validate, generateHtml);
+        HBox hBoxButtons = new HBox(save, validate, generateHtml, sign);
         hBoxButtons.setPadding(new Insets(10,10,10,25));
         VBox vBoxAll = new VBox(hBoxForm, l, Hdates, hBoxButtons);
 
@@ -93,8 +96,21 @@ public class Main extends Application {
                 }
             }
         };
-
         validate.setOnAction(buttonHandler);
+
+        EventHandler<ActionEvent> signHandler = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                try {
+                    sign();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        sign.setOnAction(signHandler);
 
         EventHandler<ActionEvent> saveHandler = new EventHandler<ActionEvent>() {
             @Override
@@ -148,12 +164,88 @@ public class Main extends Application {
 
     }
 
+    public void sign() throws IOException {
+        XadesSig dSigner = new XadesSig();
+        dSigner.installLookAndFeel();
+        dSigner.installSwingLocalization();
+        dSigner.reset();
+
+        XmlPlugin xmlPlugin = new XmlPlugin();
+
+        DataObject xmlObject = xmlPlugin.createObject2(
+                "xml_sig",											//object ID
+                "Registration",											//object description
+                readResource("C:/Users/samue/Projekty/sipvs/src/test/resources/data2.xml"),
+                readResource("C:/Users/samue/Projekty/sipvs/src/test/resources/scheme2.xsd"),
+                "",		//Namespace URI
+                "https://www.w3.org/2001/XMLSchema",				//XSD reference
+                readResource("C:/Users/samue/Projekty/sipvs/src/test/resources/test_xsl2.xsl"),
+                "http://www.w3.org/1999/XSL/Transform",
+                "TXT");			//XSL reference
+
+        if(xmlObject == null) {
+            System.out.println("Error! Something went wrong." + xmlPlugin.getErrorMessage());
+            return;
+        }
+
+        int checker = dSigner.addObject(xmlObject);
+        if(checker != 0) {
+            System.out.println("Error! Something went wrong." + xmlPlugin.getErrorMessage());
+            return;
+        }
+
+        checker = dSigner.sign20(
+                "ufl_sig",					//signature ID
+                "http://www.w3.org/2001/04/xmlenc#sha256",			//identifikátor algoritmu pre výpoèet digitálnych odtlaèkov v rámci vytváraného elektronického podpisu; nepovinný parameter; ak je null alebo prázdny, použije sa algoritmus špecifikovaný v rámci konfigurácie aplikácie
+                "urn:oid:1.3.158.36061701.1.2.2",	//jednoznaèný identifikátor podpisovej politiky použitej pri vytváraní elektronického podpisu
+                "dataEnvelopeId",				//jednoznaèné XML Id elementu xzep:DataEnvelope
+                "dataEnvelopeURI",				//URI atribút elementu xzep:DataEnvelope
+                "dataEnvelopeDescr");			//Description atribút elementu xzep:DataEnvelope
+
+        if(checker != 0) {
+            System.out.println("Error! Something went wrong." + xmlPlugin.getErrorMessage());
+            return;
+        }
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save file as");
+        fileChooser.getExtensionFilters().clear();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML", "*.xml"));
+
+        File file = fileChooser.showSaveDialog(null);
+        if (file != null) {
+            BufferedOutputStream bufOut = new BufferedOutputStream(new FileOutputStream(file));
+            byte[] xmlBytes = dSigner.getSignedXmlWithEnvelope().getBytes("UTF-8");
+
+            bufOut.write(xmlBytes);
+            bufOut.close();
+
+            fileChooser.setInitialDirectory(file.getParentFile());
+        }
+        System.out.println("Success! Document successfully created.");
+    }
+
     public boolean isNum(String age) {
         if (Integer.parseInt(age) < 0) {
             return false;
         } else {
             return true;
         }
+    }
+    static public InputStream getResourceAsStream(String name) throws FileNotFoundException {
+        File file = new File(name);
+        InputStream stream = new FileInputStream(file);
+
+        return stream;
+    }
+
+    static public String readResource(String name) throws IOException {
+        InputStream is = getResourceAsStream(name);
+        byte[] data = new byte[is.available()];
+
+        is.read(data);
+        is.close();
+
+        return new String(data, "UTF-8");
     }
 
     public boolean isAlpha(String name) {
