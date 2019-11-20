@@ -17,7 +17,6 @@ import sk.ditec.zep.dsigner.xades.plugins.xmlplugin.XmlPlugin;
 import xmlutils.XMLSerializer;
 import xmlutils.XMLValidator;
 import xmlutils.XMLtoHTML;
-
 import javax.xml.transform.stream.StreamSource;
 import java.io.*;
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ public class Main extends Application {
     public void start(final Stage primaryStage) throws Exception{
         primaryStage.setTitle("XML Validator");
 
-        Label nameL = new Label("Name");
+        final Label nameL = new Label("Name");
         nameL.setPadding(new Insets(5,10,5,10));
         final TextField nameT = new TextField();
 
@@ -90,9 +89,9 @@ public class Main extends Application {
                 File file = chooser.showOpenDialog(primaryStage);
                 String msg = xv.validate(file.getAbsolutePath(), "C:/Users/samue/Projekty/sipvs/src/test/resources/scheme.xsd");
                 if (msg == null) {
-                    new Alert(Alert.AlertType.CONFIRMATION, "XML is VALID!").showAndWait();
+//                    new Alert(Alert.AlertType.CONFIRMATION, "XML is VALID!").showAndWait();
                 } else {
-                    new Alert(Alert.AlertType.ERROR, "XML is INVALID!\n" + msg).showAndWait();
+//                    new Alert(Alert.AlertType.ERROR, "XML is INVALID!\n" + msg).showAndWait();
                 }
             }
         };
@@ -102,8 +101,12 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
 
+                File fileXml = chooser.showOpenDialog(primaryStage);
+                File fileXsd = chooser.showOpenDialog(primaryStage);
+                File filXsl = chooser.showOpenDialog(primaryStage);
+
                 try {
-                    sign();
+                    sign(fileXml.getAbsolutePath(), fileXsd.getAbsolutePath(), filXsl.getAbsolutePath());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -124,7 +127,7 @@ public class Main extends Application {
                 if (!isAlpha(nameT.getText()) || nameT.getText().length() == 0 ||
                         !isAlpha(surnameT.getText()) || surnameT.getText().length() == 0 ||
                         ageT.getText().length() == 0 || finalDates.isEmpty()){
-                    new Alert(Alert.AlertType.ERROR, "Some inputs are Invalid or Empty!").showAndWait();
+//                    new Alert(Alert.AlertType.ERROR, "Some inputs are Invalid or Empty!").showAndWait();
                 } else {
                     try {
 
@@ -139,7 +142,7 @@ public class Main extends Application {
                             System.out.println("niekde je chyba");
                         }
                     } catch (NumberFormatException e) {
-                        new Alert(Alert.AlertType.ERROR, "Age must be number!").showAndWait();
+//                        new Alert(Alert.AlertType.ERROR, "Age must be number!").showAndWait();
                     }
                 }
             }
@@ -152,7 +155,7 @@ public class Main extends Application {
             public void handle(ActionEvent event) {
                 File fileOpen = chooser.showOpenDialog(primaryStage);
                 File fileToSave = chooser.showSaveDialog(primaryStage);
-                xth.convertXMLToHTML(new StreamSource(fileOpen),new StreamSource(new File("C:/Users/samue/Projekty/sipvs/src/test/resources/test_xsl.xsl")),fileToSave.getAbsolutePath() + ".html");
+                xth.convertXMLToHTML(new StreamSource(fileOpen),new StreamSource(new File("C:/Users/otrub/Projects/sipvs/src/test/resources/test_xsl.xsl")),fileToSave.getAbsolutePath() + ".html");
             }
         };
 
@@ -164,7 +167,7 @@ public class Main extends Application {
 
     }
 
-    public void sign() throws IOException {
+    public void sign(String xml, String xsd, String xsl) throws IOException {
         XadesSig dSigner = new XadesSig();
         dSigner.installLookAndFeel();
         dSigner.installSwingLocalization();
@@ -173,15 +176,15 @@ public class Main extends Application {
         XmlPlugin xmlPlugin = new XmlPlugin();
 
         DataObject xmlObject = xmlPlugin.createObject2(
-                "xml_sig",											//object ID
-                "Registration",											//object description
-                readResource("C:/Users/samue/Projekty/sipvs/src/test/resources/data2.xml"),
-                readResource("C:/Users/samue/Projekty/sipvs/src/test/resources/scheme2.xsd"),
-                "",		//Namespace URI
-                "https://www.w3.org/2001/XMLSchema",				//XSD reference
-                readResource("C:/Users/samue/Projekty/sipvs/src/test/resources/test_xsl2.xsl"),
+                "xml_sig",
+                "Registration",
+                readResource(xml),
+                readResource(xsd),
+                "",
+                "https://www.w3.org/2001/XMLSchema",
+                readResource(xsl),
                 "http://www.w3.org/1999/XSL/Transform",
-                "TXT");			//XSL reference
+                "TXT");
 
         if(xmlObject == null) {
             System.out.println("Error! Something went wrong." + xmlPlugin.getErrorMessage());
@@ -189,18 +192,29 @@ public class Main extends Application {
         }
 
         int checker = dSigner.addObject(xmlObject);
+        DataObject xmlObject2 = xmlPlugin.createObject2(
+                "xml_sign",
+                "Registrations",
+                readResource(xml),
+                readResource(xsd),
+                "",
+                "https://www.w3.org/2001/XMLSchema",
+                readResource(xsl),
+                "http://www.w3.org/1999/XSL/Transform",
+                "TXT"); //malo by byť HTML
+        dSigner.addObject(xmlObject2);
         if(checker != 0) {
             System.out.println("Error! Something went wrong." + xmlPlugin.getErrorMessage());
             return;
         }
 
         checker = dSigner.sign20(
-                "ufl_sig",					//signature ID
-                "http://www.w3.org/2001/04/xmlenc#sha256",			//identifikátor algoritmu pre výpoèet digitálnych odtlaèkov v rámci vytváraného elektronického podpisu; nepovinný parameter; ak je null alebo prázdny, použije sa algoritmus špecifikovaný v rámci konfigurácie aplikácie
-                "urn:oid:1.3.158.36061701.1.2.2",	//jednoznaèný identifikátor podpisovej politiky použitej pri vytváraní elektronického podpisu
-                "dataEnvelopeId",				//jednoznaèné XML Id elementu xzep:DataEnvelope
-                "dataEnvelopeURI",				//URI atribút elementu xzep:DataEnvelope
-                "dataEnvelopeDescr");			//Description atribút elementu xzep:DataEnvelope
+                "course_sig",
+                "http://www.w3.org/2001/04/xmlenc#sha256",
+                "urn:oid:1.3.158.36061701.1.2.2",
+                "dataEnvelopeId",
+                "dataEnvelopeURI",
+                "dataEnvelopeDescr");
 
         if(checker != 0) {
             System.out.println("Error! Something went wrong." + xmlPlugin.getErrorMessage());

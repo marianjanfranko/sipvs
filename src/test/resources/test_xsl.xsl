@@ -5,27 +5,27 @@
 	<xsl:template match="/">
 		<html>
 
-			<head>
-				<style type="text/css">
-					table.tfmt {
-					border: 1px ;
-					}
+<!--			<head>-->
+<!--				<style type="text/css">-->
+<!--					table.tfmt {-->
+<!--					border: 1px ;-->
+<!--					}-->
 
-					td.colfmt {
-						border: 1px ;
-						background-color: white;
-						color: black;
-						float: left;
-						width: 100px;
-					}
+<!--					td.colfmt {-->
+<!--						border: 1px ;-->
+<!--						background-color: white;-->
+<!--						color: black;-->
+<!--						float: left;-->
+<!--						width: 100px;-->
+<!--					}-->
 
-					th {
-					background-color: #2E9AFE;
-					color: white;
-					}
+<!--					th {-->
+<!--					background-color: #2E9AFE;-->
+<!--					color: white;-->
+<!--					}-->
 
-				</style>
-			</head>
+<!--				</style>-->
+<!--			</head>-->
 
 			<body>
 				<table class="tfmt">
