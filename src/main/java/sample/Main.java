@@ -3,6 +3,7 @@ package sample;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -11,23 +12,42 @@ import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import sk.ditec.zep.dsigner.xades.XadesSig;
 import sk.ditec.zep.dsigner.xades.plugin.DataObject;
 import sk.ditec.zep.dsigner.xades.plugins.xmlplugin.XmlPlugin;
 import xmlutils.XMLSerializer;
 import xmlutils.XMLValidator;
 import xmlutils.XMLtoHTML;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.*;
 import java.util.ArrayList;
-
+import java.util.Arrays;
+import java.util.Base64;
+import org.bouncycastle.tsp.TimeStampResponse;
 public class Main extends Application {
-    public FileChooser chooser = new FileChooser();
-    XMLValidator xv = new XMLValidator();
-    XMLSerializer xs = new XMLSerializer();
-    XMLtoHTML xth = new XMLtoHTML();
 
-    String[] dates = { "2020-12-20", "2020-12-21", "2020-12-22", "2020-12-23", "2020-12-24", "2020-12-25" };
+    private FileChooser chooser = new FileChooser();
+    private XMLValidator xv = new XMLValidator();
+    private XMLSerializer xs = new XMLSerializer();
+    private XMLtoHTML xth = new XMLtoHTML();
+    private DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+    private DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+
+    private String[] dates = { "2020-12-20", "2020-12-21", "2020-12-22", "2020-12-23", "2020-12-24", "2020-12-25" };
+
+    public Main() throws ParserConfigurationException {
+    }
 
     @Override
     public void start(final Stage primaryStage) throws Exception{
@@ -78,8 +98,9 @@ public class Main extends Application {
         Button validate = new Button("Validate");
         Button generateHtml = new Button("Generate HTML");
         final Button sign = new Button("sign");
+        Button timeStamp = new Button("Timestamp");
 
-        HBox hBoxButtons = new HBox(save, validate, generateHtml, sign);
+        HBox hBoxButtons = new HBox(save, validate, generateHtml, sign, timeStamp);
         hBoxButtons.setPadding(new Insets(10,10,10,25));
         VBox vBoxAll = new VBox(hBoxForm, l, Hdates, hBoxButtons);
 
@@ -160,6 +181,15 @@ public class Main extends Application {
         };
 
         generateHtml.setOnAction(showHandler);
+
+        EventHandler<ActionEvent> tsHandler = new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                AddTimestamp();
+            }
+        };
+
+        timeStamp.setOnAction(tsHandler);
 
         Scene scene = new Scene(vBoxAll, 300, 500);
         primaryStage.setScene(scene);
@@ -260,6 +290,54 @@ public class Main extends Application {
         is.close();
 
         return new String(data, "UTF-8");
+    }
+
+    @FXML
+    private void AddTimestamp() {
+        File signedXml = null;
+        FileChooser fileChooser = new FileChooser();
+
+        signedXml = fileChooser.showOpenDialog(null);
+        if (signedXml == null) {
+            new Alert(Alert.AlertType.ERROR, "No XML file was chosen.").showAndWait();
+            return;
+        }
+        try {
+            docBuilder.reset();
+            Document doc = docBuilder.parse(signedXml);
+
+            Node sigElem = doc.getElementsByTagName("ds:SignatureValue").item(0);
+            if (sigElem == null) {
+                new Alert(Alert.AlertType.ERROR, "Your xml document is not signed!").showAndWait();
+                return;
+            }
+
+            Node qualifProps = doc.getElementsByTagName("xades:QualifyingProperties").item(0);
+            if (qualifProps == null) {
+                new Alert(Alert.AlertType.ERROR, "'xades:QualifyingProperties' element is missing in signed XML document").showAndWait();
+                return;
+            }
+            String signValue = sigElem.getTextContent();
+            String tsGenUrl = "http://test.ditec.sk/timestampws/TS.aspx";
+            byte[] request = TimeStamp.getRequest(Base64.getEncoder().encodeToString(signValue.getBytes()).getBytes());
+            TimeStampResponse response = TimeStamp.getResponse(request, tsGenUrl);
+
+            String tsToken = new String(Base64.getEncoder().encode(response.getTimeStampToken().getEncoded()));
+            TimeStamp.addTsElements(doc, tsToken, qualifProps);
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+            DOMSource xmlSource = new DOMSource(doc);
+            File file = fileChooser.showSaveDialog(null);
+            if (file != null) {
+                StreamResult stream = new StreamResult(file);
+                transformer.transform(xmlSource, stream);
+                new Alert(Alert.AlertType.CONFIRMATION, "XML file was successfully written.").showAndWait();
+            }
+        } catch (Exception ex) {
+            new Alert(Alert.AlertType.ERROR, ex.getMessage() + "\n" + Arrays.toString(ex.getStackTrace())).showAndWait();
+        }
     }
 
     public boolean isAlpha(String name) {
